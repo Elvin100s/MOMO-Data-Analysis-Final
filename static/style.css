@@ -1,0 +1,199 @@
+:root {
+    --bg-color: #f5f5f5;
+    --container-bg: white;
+    --text-color: #333;
+    --border-color: #ddd;
+    --hover-color: #f5f5f5;
+    --shadow-color: rgba(0,0,0,0.1);
+    --link-color: #2196F3;
+    --link-hover: #1976D2;
+    --modal-bg: #fefefe;
+    --modal-overlay: rgba(0,0,0,0.4);
+}
+
+[data-theme="dark"] {
+    --bg-color: #1a1a1a;
+    --container-bg: #2d2d2d;
+    --text-color: #ffffff;
+    --border-color: #404040;
+    --hover-color: #404040;
+    --shadow-color: rgba(0,0,0,0.3);
+    --link-color: #64B5F6;
+    --link-hover: #90CAF9;
+    --modal-bg: #2d2d2d;
+    --modal-overlay: rgba(0,0,0,0.7);
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: var(--container-bg);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px var(--shadow-color);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+h1 {
+    color: var(--text-color);
+    text-align: center;
+    transition: color 0.3s;
+}
+
+.charts {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.chart-container {
+    width: 35%;
+    background: var(--container-bg);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 5px var(--shadow-color);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.transaction-table {
+    margin-top: 30px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    transition: border-color 0.3s;
+}
+
+th {
+    background-color: var(--hover-color);
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+tr:hover {
+    background-color: var(--hover-color);
+    transition: background-color 0.3s;
+}
+
+/* Person link styles */
+.person-link {
+    color: var(--link-color);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.person-link:hover {
+    text-decoration: underline;
+    color: var(--link-hover);
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--modal-overlay);
+    transition: background-color 0.3s;
+}
+
+.modal-content {
+    background-color: var(--modal-bg);
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    width: 80%;
+    max-width: 800px;
+    border-radius: 8px;
+    position: relative;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.close {
+    color: var(--text-color);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close:hover {
+    color: var(--link-color);
+}
+
+.visualization-options {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.visualization-options button {
+    background-color: var(--link-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.visualization-options button:hover {
+    background-color: var(--link-hover);
+}
+
+/* Theme toggle button */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: var(--container-bg);
+    border: 2px solid var(--border-color);
+    color: var(--text-color);
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+    box-shadow: 0 2px 5px var(--shadow-color);
+    z-index: 1000;
+}
+
+.theme-toggle:hover {
+    background-color: var(--hover-color);
+    transform: scale(1.05);
+}
+
+.theme-toggle i {
+    font-size: 20px;
+    transition: transform 0.3s;
+}
+
+.theme-toggle:hover i {
+    transform: rotate(15deg);
+}

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mobile Money Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <i class="fas fa-moon"></i>
+        <span>Dark Mode</span>
+    </button>
+
+    <div class="container">
+        <h1>Mobile Money Transaction Analysis</h1>
+        
+        <div class="charts">
+            <div class="chart-container">
+                <canvas id="transactionTypeChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="transactionAmountChart"></canvas>
+            </div>
+        </div>
+
+        <div class="transaction-table">
+            <h2>Transaction History</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Amount</th>
+                        <th>Type</th>
+                        <th>Phone Number</th>
+                        <th>Balance After</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                    <tr>
+                        <td>{{ transaction[4] }}</td>
+                        <td><a href="#" class="person-link" data-name="{{ transaction[1] }}">{{ transaction[1] }}</a></td>
+                        <td>{{ transaction[2] }}</td>
+                        <td>{{ transaction[3] }}</td>
+                        <td>{{ transaction[5] }}</td>
+                        <td>{{ transaction[6] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Visualization Modal -->
+    <div id="visualizationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>View Transactions for <span id="selectedPerson"></span></h2>
+            <div class="visualization-options">
+                <button onclick="switchVisualization('pie')">Pie Chart</button>
+                <button onclick="switchVisualization('bar')">Bar Graph</button>
+            </div>
+            <div class="chart-container">
+                <canvas id="personChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme handling
+        function toggleTheme() {
+            const body = document.documentElement;
+            const themeToggle = document.querySelector('.theme-toggle');
+            const icon = themeToggle.querySelector('i');
+            const text = themeToggle.querySelector('span');
+            
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                icon.className = 'fas fa-moon';
+                text.textContent = 'Dark Mode';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                icon.className = 'fas fa-sun';
+                text.textContent = 'Light Mode';
+                localStorage.setItem('theme', 'dark');
+            }
+            
+            // Update charts with new theme colors
+            updateChartsTheme();
+        }
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.querySelector('.theme-toggle i').className = 'fas fa-sun';
+            document.querySelector('.theme-toggle span').textContent = 'Light Mode';
+        }
+
+        // Update charts theme
+        function updateChartsTheme() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const textColor = isDark ? '#ffffff' : '#333333';
+            const gridColor = isDark ? '#404040' : '#dddddd';
+
+            // Update main charts
+            if (window.typeChart) {
+                window.typeChart.options.plugins.legend.labels.color = textColor;
+                window.typeChart.update();
+            }
+            if (window.amountChart) {
+                window.amountChart.options.plugins.legend.labels.color = textColor;
+                window.amountChart.options.scales.y.grid.color = gridColor;
+                window.amountChart.options.scales.x.grid.color = gridColor;
+                window.amountChart.options.scales.y.ticks.color = textColor;
+                window.amountChart.options.scales.x.ticks.color = textColor;
+                window.amountChart.update();
+            }
+            if (window.personChart) {
+                window.personChart.options.plugins.legend.labels.color = textColor;
+                if (window.personChart.config.type === 'bar') {
+                    window.personChart.options.scales.y.grid.color = gridColor;
+                    window.personChart.options.scales.x.grid.color = gridColor;
+                    window.personChart.options.scales.y.ticks.color = textColor;
+                    window.personChart.options.scales.x.ticks.color = textColor;
+                }
+                window.personChart.update();
+            }
+        }
+
+        // Initialize main charts
+        const typeCtx = document.getElementById('transactionTypeChart').getContext('2d');
+        const amountCtx = document.getElementById('transactionAmountChart').getContext('2d');
+        
+        window.typeChart = new Chart(typeCtx, {
+            type: 'pie',
+            data: {
+                labels: {{ chart_labels | safe }},
+                datasets: [{
+                    data: {{ chart_counts | safe }},
+                    backgroundColor: [
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCE56',
+                        '#4BC0C0',
+                        '#9966FF'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Transaction Types Distribution',
+                        color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#ffffff' : '#333333'
+                    },
+                    legend: {
+                        labels: {
+                            color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#ffffff' : '#333333'
+                        }
+                    }
+                }
+            }
+        });
+
+        window.amountChart = new Chart(amountCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ chart_labels | safe }},
+                datasets: [{
+                    label: 'Total Amount',
+                    data: {{ chart_totals | safe }},
+                    backgroundColor: '#36A2EB'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Total Amount by Transaction Type',
+                        color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#ffffff' : '#333333'
+                    },
+                    legend: {
+                        labels: {
+                            color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#ffffff' : '#333333'
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#404040' : '#dddddd'
+                        },
+                        ticks: {
+                            color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#ffffff' : '#333333'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#404040' : '#dddddd'
+                        },
+                        ticks: {
+                            color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#ffffff' : '#333333'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Modal functionality
+        const modal = document.getElementById('visualizationModal');
+        const span = document.getElementsByClassName('close')[0];
+        let personChart = null;
+        let currentPersonData = null;
+
+        // Make all person links clickable
+        document.querySelectorAll('.person-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const name = this.getAttribute('data-name');
+                document.getElementById('selectedPerson').textContent = name;
+                modal.style.display = 'block';
+                fetchPersonData(name);
+            });
+        });
+
+        // Close modal when clicking X
+        span.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        function fetchPersonData(name) {
+            console.log('Fetching data for:', name);
+            fetch(`/person/${encodeURIComponent(name)}`)
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Received data:', data);
+                    if (data.labels.length === 0) {
+                        alert('No transaction data found for this person');
+                        return;
+                    }
+                    currentPersonData = data;
+                    showVisualization('pie', data);
+                })
+                .catch(error => {
+                    console.error('Error fetching person data:', error);
+                    alert('Error loading transaction data. Please try again.');
+                });
+        }
+
+        function switchVisualization(type) {
+            if (currentPersonData) {
+                showVisualization(type, currentPersonData);
+            }
+        }
+
+        function showVisualization(type, data) {
+            const ctx = document.getElementById('personChart').getContext('2d');
+            
+            if (personChart) {
+                personChart.destroy();
+            }
+
+            const chartConfig = {
+                type: type,
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Transaction Amount',
+                        data: data.values,
+                        backgroundColor: [
+                            '#FF6384',
+                            '#36A2EB',
+                            '#FFCE56',
+                            '#4BC0C0',
+                            '#9966FF'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Transactions for ${data.name}`,
+                            color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#ffffff' : '#333333'
+                        },
+                        legend: {
+                            labels: {
+                                color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#ffffff' : '#333333'
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Add specific options for bar chart
+            if (type === 'bar') {
+                chartConfig.options.scales = {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Amount (RWF)',
+                            color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#ffffff' : '#333333'
+                        },
+                        grid: {
+                            color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#404040' : '#dddddd'
+                        },
+                        ticks: {
+                            color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#ffffff' : '#333333'
+                        }
+                    }
+                };
+            }
+
+            personChart = new Chart(ctx, chartConfig);
+        }
+    </script>
+</body>
+</html>
