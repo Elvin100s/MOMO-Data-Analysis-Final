@@ -230,7 +230,7 @@ The system categorizes transactions into the following types:
 ## 👥 Development Team
 
 ### Core Developers
-- [Your Name] - Full Stack Developer
+- [Your Name] r
   - Implemented XML processing
   - Designed database schema
   - Developed web interface
@@ -238,13 +238,13 @@ The system categorizes transactions into the following types:
   - Implemented theme switching
 
 ### Contributors
-- [Team Member 2] - Backend Developer
+- Elvin Cyubahiro (e.cyubahiro@alustudent.com)
   - Database optimization
   - API development
   - Data processing
   - Performance improvements
 
-- [Team Member 3] - Frontend Developer
+- [Team Member 3] 
   - UI/UX design
   - Chart implementations
   - Theme development
