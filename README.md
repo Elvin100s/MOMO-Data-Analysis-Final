@@ -2,14 +2,14 @@
 
 A full-stack application for analyzing Mobile Money transactions from SMS data. This system processes XML-formatted SMS messages, stores them in a database, and provides an interactive dashboard for data visualization and analysis.
 
-## 📋 Table of Contents
+## Table of Contents
 - [Features](#features)
 - [Project Structure](#project-structure)
 - [System Architecture](#system-architecture)
 - [Technical Details](#technical-details)
 - [Installation & Usage](#installation--usage)
 
-## ✨ Features
+##  Features
 
 ### Core Functionality
 - XML data processing and categorization
@@ -28,6 +28,7 @@ A full-stack application for analyzing Mobile Money transactions from SMS data. 
 ```
 MOMO Data-Analysis-Final/
 ├── app.py                 # Main Flask application
+├── process_xml.py        # XML data processing and database population
 ├── database.py           # Database operations and queries
 ├── schema.sql            # Database schema and structure
 ├── static/              # Static files
@@ -37,7 +38,7 @@ MOMO Data-Analysis-Final/
     └── index.html       # Main template
 ```
 
-## 🔄 System Architecture
+##  System Architecture
 
 ### High-Level Architecture
 ```
@@ -118,7 +119,7 @@ A complete database schema is provided in `schema.sql`, which includes:
 - Bank Deposit: Money deposited from bank
 - Withdrawal: Cash withdrawals from agents
 
-## 🛠️ Technologies Used
+##  Technologies Used
 
 ### Backend
 - Python 3.8+
@@ -140,19 +141,23 @@ A complete database schema is provided in `schema.sql`, which includes:
 
 2. **Installation**
 ```bash
-git clone [repository-url]
 cd MOMO-Data-Analysis-Final
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+  
 pip install -r requirements.txt
 ```
 
 3. **Running the Application**
 ```bash
+# First, process the XML data to populate the database
+python process_xml.py
+
+# Then start the web application
 python app.py
 ```
 Then open `http://localhost:5000` in your browser
 
-## 📄 License
+
+
+##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
