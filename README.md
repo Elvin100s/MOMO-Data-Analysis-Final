@@ -208,16 +208,18 @@ A full-stack application for analyzing Mobile Money transactions from SMS data. 
 ## 🔧 Project Structure
 
 ```
-momo_analysis/
-├── app.py                 # Flask web application
-├── database.py           # Database operations
-├── process_xml.py        # XML processing and data extraction
-├── requirements.txt      # Python dependencies
-├── modified_sms_v2.xml  # Input XML file
+MOMO Data-Analysis-Final/
+├── app.py                 # Main Flask application
+├── database.py           # Database operations and queries
+├── schema.sql            # Database schema and structure
+├── momo.db              # SQLite database file
 ├── static/
-│   └── style.css        # CSS styles
-└── templates/
-    └── index.html       # Main dashboard template
+│   ├── style.css        # CSS styles
+│   └── script.js        # JavaScript for interactivity
+├── templates/
+│   └── index.html       # Main dashboard template
+├── requirements.txt      # Python dependencies
+└── README.md            # Project documentation
 ```
 
 ### File Descriptions and Functionality
@@ -334,6 +336,26 @@ CREATE TABLE transactions (
 )
 ```
 
+A complete database schema is provided in `schema.sql`, which includes:
+- Detailed table structures with all necessary fields
+- Indexes for optimized query performance
+- Views for common analytical queries
+- Transaction type definitions
+- Triggers for data integrity
+- Support for all transaction categories:
+  - Incoming Money
+  - Payments to Code Holders
+  - Transfers to Mobile Numbers
+  - Bank Deposits
+  - Airtime Bill Payments
+  - Cash Power Bill Payments
+  - Third Party Transactions
+  - Withdrawals from Agents
+  - Bank Transfers
+  - Internet and Voice Bundle Purchases
+
+The schema.sql file serves as comprehensive documentation of the database design and can be used to recreate the database structure if needed.
+
 ## 🔧 Prerequisites
 
 - Python 3.8 or higher
@@ -431,6 +453,26 @@ CREATE TABLE transactions (
 )
 ```
 
+A complete database schema is provided in `schema.sql`, which includes:
+- Detailed table structures with all necessary fields
+- Indexes for optimized query performance
+- Views for common analytical queries
+- Transaction type definitions
+- Triggers for data integrity
+- Support for all transaction categories:
+  - Incoming Money
+  - Payments to Code Holders
+  - Transfers to Mobile Numbers
+  - Bank Deposits
+  - Airtime Bill Payments
+  - Cash Power Bill Payments
+  - Third Party Transactions
+  - Withdrawals from Agents
+  - Bank Transfers
+  - Internet and Voice Bundle Purchases
+
+The schema.sql file serves as comprehensive documentation of the database design and can be used to recreate the database structure if needed.
+
 ### Transaction Types
 
 The system categorizes transactions into the following types:
@@ -488,7 +530,7 @@ The system categorizes transactions into the following types:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## �� Acknowledgments
+## 🤝 Acknowledgments
 
 - Thanks to all the open-source projects that made this possible
 - Special thanks to the development team for their hard work
