@@ -11,3 +11,6 @@
 ### Yvette Muhoracyeye
 - Email: y.muhoracye@alustudent.com
 - Role: Developer
+### Morsal Hakim
+- Email: m.hakim@alustudent.com
+- Role: Developer
