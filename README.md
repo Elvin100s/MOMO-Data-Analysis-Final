@@ -31,6 +31,7 @@ MOMO Data-Analysis-Final/
 ├── process_xml.py        # XML data processing and database population
 ├── database.py           # Database operations and queries
 ├── schema.sql            # Database schema and structure
+├── report.pdf            # Detailed project documentation and analysis
 ├── static/              # Static files
 │   ├── style.css        # Styling
 │        
