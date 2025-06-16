@@ -47,12 +47,21 @@
             <h2>Search by Name</h2>
             <div class="search-container">
                 <input type="text" id="nameSearch" placeholder="Enter name to search..." onkeyup="searchByName()">
-                <div id="searchResults" class="search-results" style="display: none;">
-                    <h3>Transactions for <span id="searchedName"></span>:</h3>
-                    <div id="searchLoadingMessage" style="display: none;">Loading...</div>
-                    <div id="searchErrorMessage" style="display: none;" class="error-message"></div>
-                    <div class="search-results-grid" id="searchResultsList"></div>
-                </div>
+                <button onclick="closeSearch()" style="
+                    background-color: #007bff;
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    padding: 8px 16px;
+                    cursor: pointer;
+                    transition: all 0.5s ease;
+                ">Close</button>
+            </div>
+            <div id="searchResults" class="search-results" style="display: none;">
+                <h3>Transactions for <span id="searchedName"></span>:</h3>
+                <div id="searchLoadingMessage" style="display: none;">Loading...</div>
+                <div id="searchErrorMessage" style="display: none;" class="error-message"></div>
+                <div class="search-results-grid" id="searchResultsList"></div>
             </div>
         </div>
 
@@ -452,22 +461,23 @@
         function searchByName() {
             const searchInput = document.getElementById('nameSearch');
             const searchResults = document.getElementById('searchResults');
-            const searchResultsList = document.getElementById('searchResultsList');
-            const searchedName = document.getElementById('searchedName');
             const searchLoadingMessage = document.getElementById('searchLoadingMessage');
             const searchErrorMessage = document.getElementById('searchErrorMessage');
+            const searchResultsList = document.getElementById('searchResultsList');
+            const searchedName = document.getElementById('searchedName');
             
             const name = searchInput.value.trim();
-            
-            if (name.length === 0) {
+            if (name.length < 1) {
                 searchResults.style.display = 'none';
                 return;
             }
-            
+
+            searchResults.style.display = 'block';
             searchLoadingMessage.style.display = 'block';
             searchErrorMessage.style.display = 'none';
-            searchResults.style.display = 'block';
-            
+            searchResultsList.innerHTML = '';
+            searchedName.textContent = 'Matching Names';
+
             // First, get all transactions to find matching names
             fetch('/')
                 .then(response => response.text())
@@ -494,9 +504,6 @@
                     }
                     
                     // Display matching names
-                    searchResultsList.innerHTML = '';
-                    searchedName.textContent = 'Matching Names';
-                    
                     matchingNames.forEach(matchName => {
                         const nameCard = document.createElement('div');
                         nameCard.className = 'person-card';
@@ -525,10 +532,12 @@
             const searchLoadingMessage = document.getElementById('searchLoadingMessage');
             const searchErrorMessage = document.getElementById('searchErrorMessage');
             
+            // Clear any existing content
+            searchResultsList.innerHTML = '';
             searchLoadingMessage.style.display = 'block';
             searchErrorMessage.style.display = 'none';
             searchedName.textContent = name;
-            
+
             fetch(`/search_by_name/${encodeURIComponent(name)}`)
                 .then(response => response.json())
                 .then(data => {
@@ -538,48 +547,212 @@
                         searchErrorMessage.style.display = 'block';
                         return;
                     }
-                    
-                    searchResultsList.innerHTML = '';
+
                     if (data.transactions.length === 0) {
                         searchErrorMessage.textContent = 'No transactions found for this name.';
                         searchErrorMessage.style.display = 'block';
                         return;
                     }
-                    
+
+                    // Create chart container
+                    const chartContainer = document.createElement('div');
+                    chartContainer.className = 'chart-container';
+                    chartContainer.style.marginBottom = '20px';
+                    const canvas = document.createElement('canvas');
+                    chartContainer.appendChild(canvas);
+                    searchResultsList.appendChild(chartContainer);
+
+                    // Process data for pie chart
+                    const typeTotals = {};
                     data.transactions.forEach(transaction => {
-                        const transactionCard = document.createElement('div');
-                        transactionCard.className = 'person-card';
-                        transactionCard.innerHTML = `
-                            <div class="person-header">
-                                <h4>${transaction.date}</h4>
-                            </div>
-                            <div class="person-stats">
-                                <div class="stat-item">
-                                    <span class="stat-label">Amount:</span>
-                                    <span class="stat-value">${transaction.amount}</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-label">Type:</span>
-                                    <span class="stat-value">${transaction.type}</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-label">Phone:</span>
-                                    <span class="stat-value">${transaction.phone_number}</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-label">Balance After:</span>
-                                    <span class="stat-value">${transaction.balance_after}</span>
-                                </div>
-                            </div>
-                        `;
-                        searchResultsList.appendChild(transactionCard);
+                        const type = transaction.type;
+                        const amount = parseFloat(transaction.amount);
+                        typeTotals[type] = (typeTotals[type] || 0) + amount;
                     });
+
+                    // Create pie chart
+                    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                    const textColor = isDark ? '#ffffff' : '#333333';
+                    
+                    new Chart(canvas, {
+                        type: 'pie',
+                        data: {
+                            labels: Object.keys(typeTotals),
+                            datasets: [{
+                                data: Object.values(typeTotals),
+                                backgroundColor: [
+                                    '#FF6384',
+                                    '#36A2EB',
+                                    '#FFCE56',
+                                    '#4BC0C0',
+                                    '#9966FF'
+                                ]
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: `Transaction Distribution for ${name}`,
+                                    color: textColor,
+                                    font: {
+                                        size: 16
+                                    }
+                                },
+                                legend: {
+                                    labels: {
+                                        color: textColor,
+                                        font: {
+                                            size: 14
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    // Add transaction table
+                    const tableContainer = document.createElement('div');
+                    tableContainer.className = 'transaction-table';
+                    const initialRows = 5; // Number of rows to show initially
+                    const incrementRows = 3; // Number of additional rows to show each time
+                    
+                    tableContainer.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h3 style="color: ${textColor}">Transaction History</h3>
+                            <button onclick="closeTable(this)" style="
+                                padding: 8px 16px;
+                                background-color: #dc3545;
+                                color: white;
+                                border: none;
+                                border-radius: 4px;
+                                cursor: pointer;
+                                transition: background-color 0.3s;
+                            ">
+                                Close Table
+                            </button>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="color: ${textColor}">Date</th>
+                                    <th style="color: ${textColor}">Amount</th>
+                                    <th style="color: ${textColor}">Type</th>
+                                    <th style="color: ${textColor}">Phone Number</th>
+                                    <th style="color: ${textColor}">Balance After</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.transactions.map((transaction, index) => `
+                                    <tr class="${index >= initialRows ? 'hidden-row' : ''}" style="display: ${index >= initialRows ? 'none' : 'table-row'}">
+                                        <td style="color: ${textColor}">${transaction.date}</td>
+                                        <td style="color: ${textColor}">${transaction.amount}</td>
+                                        <td style="color: ${textColor}">${transaction.type}</td>
+                                        <td style="color: ${textColor}">${transaction.phone_number}</td>
+                                        <td style="color: ${textColor}">${transaction.balance_after}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                        ${data.transactions.length > initialRows ? `
+                            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                                <button class="toggle-table-btn" onclick="showMore(this, ${incrementRows})" style="
+                                    padding: 8px 16px;
+                                    background-color: var(--primary-color);
+                                    color: white;
+                                    border: none;
+                                    border-radius: 4px;
+                                    cursor: pointer;
+                                    transition: background-color 0.3s;
+                                ">
+                                    Show More
+                                </button>
+                                <button class="toggle-table-btn" onclick="showLess(this)" style="
+                                    padding: 8px 16px;
+                                    background-color: #6c757d;
+                                    color: white;
+                                    border: none;
+                                    border-radius: 4px;
+                                    cursor: pointer;
+                                    transition: background-color 0.3s;
+                                ">
+                                    Show Less
+                                </button>
+                            </div>
+                        ` : ''}
+                    `;
+                    searchResultsList.appendChild(tableContainer);
                 })
                 .catch(error => {
                     searchLoadingMessage.style.display = 'none';
                     searchErrorMessage.textContent = 'Error searching transactions. Please try again.';
                     searchErrorMessage.style.display = 'block';
                 });
+        }
+
+        function showMore(button, incrementRows) {
+            const table = button.closest('.transaction-table').querySelector('table');
+            const hiddenRows = Array.from(table.querySelectorAll('.hidden-row'));
+            const visibleCount = table.querySelectorAll('tbody tr:not(.hidden-row)').length;
+            const totalRows = visibleCount + hiddenRows.length;
+            
+            // Show next set of rows
+            const nextSet = hiddenRows.slice(0, incrementRows);
+            nextSet.forEach(row => {
+                row.style.display = 'table-row';
+                row.classList.remove('hidden-row');
+            });
+            
+            // Hide Show More button if all rows are shown
+            if (visibleCount + incrementRows >= totalRows) {
+                button.style.display = 'none';
+            }
+        }
+
+        function showLess(button) {
+            const table = button.closest('.transaction-table').querySelector('table');
+            const allRows = Array.from(table.querySelectorAll('tbody tr'));
+            const showMoreBtn = button.previousElementSibling;
+            
+            // Hide all rows except first 5
+            allRows.forEach((row, index) => {
+                if (index >= 5) {
+                    row.style.display = 'none';
+                    row.classList.add('hidden-row');
+                }
+            });
+            
+            // Show the Show More button
+            if (showMoreBtn) {
+                showMoreBtn.style.display = 'block';
+            }
+        }
+
+        function closeTable(button) {
+            const tableContainer = button.closest('.transaction-table');
+            if (tableContainer) {
+                tableContainer.remove();
+            }
+        }
+
+        function closeSearch() {
+            const searchResults = document.getElementById('searchResults');
+            const searchInput = document.getElementById('nameSearch');
+            const searchResultsList = document.getElementById('searchResultsList');
+            
+            // Add fade out effect
+            searchResults.style.transition = 'opacity 0.5s ease';
+            searchResults.style.opacity = '0';
+            
+            // Wait for fade out before hiding
+            setTimeout(() => {
+                // Clear all content
+                searchResultsList.innerHTML = '';
+                searchResults.style.display = 'none';
+                searchResults.style.opacity = '1'; // Reset opacity for next time
+                searchInput.value = '';
+            }, 500);
         }
     </script>
 </body>

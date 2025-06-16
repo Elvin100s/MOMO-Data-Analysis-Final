@@ -59,11 +59,26 @@ A full-stack application for analyzing Mobile Money transactions from SMS data. 
    - See transaction details for each person in the filtered results
 
 5. **Search by Name**
-   - Real-time search as you type
-   - Shows matching names instantly
+   - Real-time search as you type (starts from first character)
+   - Shows matching names in card format
    - View detailed transaction history for any person
+   - Interactive pie chart showing transaction distribution
+   - Collapsible transaction table with Show More/Less functionality
+   - Smooth animations for opening/closing results
+   - Blue close button with fade effects
    - Case-insensitive search
    - Partial name matching supported
+   - Dark/Light mode compatible styling
+
+   **Search Features:**
+   - Instant results as you type
+   - Name cards with "View Transactions" button
+   - Transaction history with pie chart visualization
+   - Collapsible table with pagination
+   - Show More/Less buttons for better data management
+   - Close buttons for both search results and individual tables
+   - Smooth fade animations for better user experience
+   - Responsive design for all screen sizes
 
 6. **Theme Support**
    - Toggle between light and dark modes
