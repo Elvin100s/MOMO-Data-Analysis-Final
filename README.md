@@ -11,7 +11,6 @@ A full-stack application for analyzing Mobile Money transactions from SMS data. 
 - [Usage Guide](#usage-guide)
 - [Technical Details](#technical-details)
 - [Development](#development)
-- [Contributing](#contributing)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
 - [System Architecture](#system-architecture)
@@ -214,7 +213,6 @@ momo_analysis/
 ├── database.py           # Database operations
 ├── process_xml.py        # XML processing and data extraction
 ├── requirements.txt      # Python dependencies
-├── momo.db              # SQLite database file
 ├── modified_sms_v2.xml  # Input XML file
 ├── static/
 │   └── style.css        # CSS styles
@@ -459,20 +457,6 @@ The system categorizes transactions into the following types:
   - Created visualizations
   - Implemented theme switching
 
-### Contributors
-- Elvin Cyubahiro (e.cyubahiro@alustudent.com)
-- Morsal Hakim (m.hakim@alustudent.com)
-  - Database optimization
-  - API development
-  - Data processing
-  - Performance improvements
-
-- [Team Member 3] 
-  - UI/UX design
-  - Chart implementations
-  - Theme development
-  - Responsive design
-
 ## 🛠️ Technologies Used
 
 ### Backend
@@ -504,12 +488,10 @@ The system categorizes transactions into the following types:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## �� Acknowledgments
 
-- MTN Mobile Money for the transaction data format
-- Chart.js for visualization capabilities
-- Flask framework for web application development
-- All contributors who have helped shape this project
+- Thanks to all the open-source projects that made this possible
+- Special thanks to the development team for their hard work
 
 ## 📞 Support
 
