@@ -460,6 +460,7 @@ The system categorizes transactions into the following types:
 
 ### Contributors
 - Elvin Cyubahiro (e.cyubahiro@alustudent.com)
+- Morsal Hakim (m.hakim@alustudent.com)
   - Database optimization
   - API development
   - Data processing
