@@ -64,16 +64,26 @@ h1 {
 .charts {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
     margin-bottom: 30px;
+    gap: 20px;
 }
 
 .chart-container {
-    width: 35%;
     background: var(--container-bg);
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 0 5px var(--shadow-color);
     transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.chart-container.pie-chart {
+    width: 35%;
+    min-width: 300px;
+}
+
+.chart-container.bar-chart {
+    width: 60%;
 }
 
 .transaction-table {
