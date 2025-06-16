@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     transaction_id TEXT UNIQUE,           -- Unique transaction identifier
     name TEXT,                           -- Sender/recipient name
     amount REAL NOT NULL,                 -- Transaction amount in RWF
-    type TEXT NOT NULL,                   -- Transaction type (e.g., 'Incoming Money', 'Payment', etc.)
+    type TEXT NOT NULL,                    -- Transaction type (e.g., 'Incoming Money', 'Payment', etc.)
     date DATETIME NOT NULL,               -- Transaction date and time
     phone_number TEXT,                    -- Associated phone number
     balance_after REAL,                   -- Balance after transaction
