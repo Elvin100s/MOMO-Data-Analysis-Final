@@ -1,6 +1,6 @@
 # Mobile Money Transaction Analysis System
 
-A full-stack application for analyzing Mobile Money transactions from SMS data. This system processes XML-formatted SMS messages, stores them in a database, and provides an interactive dashboard for data visualization and analysis.
+A full-stack application for analyzing Mobile Money transactions from SMS data. This system processes XML-formatted SMS messages, stores them in a database, and provides an interactive dashboard for data visualization and analysis. The application helps users track and analyze their mobile money transactions, providing insights into spending patterns and financial behavior.
 
 ## Table of Contents
 - [Features](#features)
@@ -9,11 +9,16 @@ A full-stack application for analyzing Mobile Money transactions from SMS data. 
 - [Technical Details](#technical-details)
 - [Installation & Usage](#installation--usage)
 
-##  Features
+## Features
 
 ### Core Functionality
 - XML data processing and categorization
+  - Automatic parsing of SMS messages
+  - Transaction type detection
+  - Amount and balance extraction
 - SQLite database for transaction storage
+  - Efficient data retrieval
+  - Optimized query performance
 - Interactive web dashboard with:
   - Transaction type distribution charts
   - Amount analysis by transaction type
@@ -22,8 +27,11 @@ A full-stack application for analyzing Mobile Money transactions from SMS data. 
   - Transaction type filtering
   - Dark/Light mode support
 - Responsive design for all devices
+  - Mobile-friendly interface
+  - Adaptive layouts
+  - Touch-friendly controls
 
-## 🔧 Project Structure
+## Project Structure
 
 ```
 MOMO Data-Analysis-Final/
@@ -39,7 +47,7 @@ MOMO Data-Analysis-Final/
     └── index.html       # Main template
 ```
 
-##  System Architecture
+## System Architecture
 
 ### High-Level Architecture
 ```
@@ -88,7 +96,7 @@ MOMO Data-Analysis-Final/
 └─────────────────┘     └─────────────────┘     └─────────────────┘
 ```
 
-## 🔍 Technical Details
+## Technical Details
 
 ### Database Schema
 
@@ -120,7 +128,26 @@ A complete database schema is provided in `schema.sql`, which includes:
 - Bank Deposit: Money deposited from bank
 - Withdrawal: Cash withdrawals from agents
 
-##  Technologies Used
+### Key Features
+1. **Data Processing**
+   - XML parsing and validation
+   - Transaction categorization
+   - Data normalization
+   - Error handling
+
+2. **Database Management**
+   - Efficient data storage
+   - Optimized queries
+   - Data integrity checks
+   - Transaction history tracking
+
+3. **User Interface**
+   - Interactive charts and graphs
+   - Real-time data updates
+   - Responsive design
+   - User-friendly navigation
+
+## Technologies Used
 
 ### Backend
 - Python 3.8+
@@ -133,7 +160,7 @@ A complete database schema is provided in `schema.sql`, which includes:
 - JavaScript
 - Chart.js (Visualizations)
 
-## 📥 Installation & Usage
+## Installation & Usage
 
 1. **Prerequisites**
    - Python 3.8+
@@ -143,7 +170,6 @@ A complete database schema is provided in `schema.sql`, which includes:
 2. **Installation**
 ```bash
 cd MOMO-Data-Analysis-Final
-  
 pip install -r requirements.txt
 ```
 
@@ -157,8 +183,6 @@ python app.py
 ```
 Then open `http://localhost:5000` in your browser
 
-
-
-##  License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
