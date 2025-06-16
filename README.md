@@ -2,6 +2,8 @@
 
 A full-stack application for analyzing Mobile Money transactions from SMS data. This system processes XML-formatted SMS messages, stores them in a database, and provides an interactive dashboard for data visualization and analysis. The application helps users track and analyze their mobile money transactions, providing insights into spending patterns and financial behavior.
 
+
+link to the video :https://youtu.be/lDv7n2hEnBg
 ## Table of Contents
 - [Features](#features)
 - [Project Structure](#project-structure)
