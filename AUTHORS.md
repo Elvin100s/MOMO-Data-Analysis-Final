@@ -8,3 +8,6 @@
 ### Sydney Wamalwa
 - Email: s.wamalwa@alustudent.com
 - Role: Developer 
+### Yvette Muhoracyeye
+- Email: y.muhoracye@alustudent.com
+- Role: Developer
