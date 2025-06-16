@@ -39,6 +39,37 @@ A full-stack application for analyzing Mobile Money transactions from SMS data. 
 - Detailed transaction analytics
 - Mobile-responsive interface
 
+1. **Transaction Overview**
+   - View all transactions in a sortable table
+   - See transaction details including date, name, amount, type, phone number, and balance
+
+2. **Data Visualization**
+   - Pie chart showing distribution of transaction types
+   - Bar graph displaying total amounts by transaction type
+   - Interactive charts with hover effects and tooltips
+
+3. **Person-Specific Analysis**
+   - Click on any person's name to view their transaction history
+   - Toggle between pie chart and bar graph visualizations
+   - See detailed transaction statistics for each person
+
+4. **Transaction Type Filtering**
+   - Filter transactions by type (e.g., Cash In, Cash Out, etc.)
+   - View people who made specific types of transactions
+   - See transaction details for each person in the filtered results
+
+5. **Search by Name**
+   - Real-time search as you type
+   - Shows matching names instantly
+   - View detailed transaction history for any person
+   - Case-insensitive search
+   - Partial name matching supported
+
+6. **Theme Support**
+   - Toggle between light and dark modes
+   - Persistent theme preference
+   - Responsive design for all screen sizes
+
 ## 🔄 System Architecture
 
 ### High-Level Architecture

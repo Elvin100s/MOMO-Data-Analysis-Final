@@ -154,3 +154,16 @@ def get_transactions_by_type(trans_type):
     transactions = cursor.fetchall()
     conn.close()
     return transactions
+
+def get_transactions_by_name(name):
+    """Get all transactions for a specific person by name"""
+    conn = sqlite3.connect('momo.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+        SELECT * FROM transactions 
+        WHERE name LIKE ? 
+        ORDER BY date DESC
+    ''', (f'%{name}%',))
+    transactions = cursor.fetchall()
+    conn.close()
+    return transactions

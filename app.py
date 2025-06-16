@@ -12,7 +12,7 @@ Features:
 """
 
 from flask import Flask, render_template, jsonify
-from database import get_all_transactions, get_transaction_stats, get_person_transactions, get_transactions_by_type
+from database import get_all_transactions, get_transaction_stats, get_person_transactions, get_transactions_by_type, get_transactions_by_name
 import json
 
 app = Flask(__name__)
@@ -108,6 +108,24 @@ def transactions_by_type(trans_type):
         'people': list(people),
         'transactions': people_transactions
     })
+
+@app.route('/search_by_name/<name>')
+def search_by_name(name):
+    try:
+        transactions = get_transactions_by_name(name)
+        return jsonify({
+            'transactions': [
+                {
+                    'date': t[4],
+                    'amount': t[2],
+                    'type': t[3],
+                    'phone_number': t[5],
+                    'balance_after': t[6]
+                } for t in transactions
+            ]
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
