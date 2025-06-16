@@ -130,3 +130,27 @@ def get_person_transactions(name):
     transactions = cursor.fetchall()
     conn.close()
     return transactions
+
+def get_transactions_by_type(trans_type):
+    """
+    Retrieve all transactions of a specific type.
+    
+    Args:
+        trans_type (str): Type of transaction to search for
+        
+    Returns:
+        list: List of tuples containing all transactions of the specified type,
+              ordered by date in descending order
+    """
+    conn = sqlite3.connect('momo.db')
+    cursor = conn.cursor()
+    
+    cursor.execute('''
+    SELECT * FROM transactions 
+    WHERE type = ? 
+    ORDER BY date DESC
+    ''', (trans_type,))
+    
+    transactions = cursor.fetchall()
+    conn.close()
+    return transactions

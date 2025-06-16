@@ -26,12 +26,15 @@ A full-stack application for analyzing Mobile Money transactions from SMS data. 
   - Amount analysis by transaction type
   - Individual transaction history
   - Person-specific transaction analysis
+  - Transaction type filtering with detailed person statistics
   - Dark/Light mode support
 - Responsive design for all devices
 
 ### Advanced Features
 - Real-time data visualization
 - Interactive transaction filtering
+- Transaction type-based person analysis
+- Detailed transaction statistics per person
 - Persistent theme preferences
 - Detailed transaction analytics
 - Mobile-responsive interface
@@ -172,6 +175,120 @@ momo_analysis/
     └── index.html       # Main dashboard template
 ```
 
+### File Descriptions and Functionality
+
+#### Core Application Files
+
+1. **app.py**
+   - Main Flask web application
+   - Handles all web routes and API endpoints
+   - Features:
+     - Dashboard route for main view
+     - Person-specific transaction endpoint
+     - Transaction type filtering endpoint
+     - JSON API responses for dynamic data
+     - Chart data preparation
+
+2. **database.py**
+   - Database management module
+   - Handles all SQLite operations
+   - Features:
+     - Database creation and initialization
+     - Transaction insertion
+     - Data retrieval queries
+     - Transaction statistics calculation
+     - Person-specific queries
+     - Transaction type filtering queries
+
+3. **process_xml.py**
+   - XML data processing module
+   - Handles SMS data extraction
+   - Features:
+     - XML file parsing
+     - Transaction data extraction
+     - Data cleaning and validation
+     - Database population
+     - Transaction categorization
+
+#### Frontend Files
+
+1. **templates/index.html**
+   - Main dashboard template
+   - Features:
+     - Transaction table display
+     - Interactive charts
+     - Transaction type filter
+     - Person-specific views
+     - Dark/Light mode toggle
+     - Responsive layout
+
+2. **static/style.css**
+   - Styling and theming
+   - Features:
+     - Responsive design
+     - Dark/Light theme support
+     - Card-based layouts
+     - Interactive elements styling
+     - Chart styling
+     - Modal styling
+
+#### Configuration and Data Files
+
+1. **requirements.txt**
+   - Python package dependencies
+   - Required versions for:
+     - Flask
+     - SQLite
+     - XML processing libraries
+     - Other dependencies
+
+2. **momo.db**
+   - SQLite database file
+   - Stores:
+     - Transaction records
+     - User data
+     - Transaction statistics
+
+3. **modified_sms_v2.xml**
+   - Input data file
+   - Contains:
+     - SMS transaction records
+     - Transaction details
+     - User information
+
+### Data Flow
+
+1. **Data Processing Flow**
+   ```
+   XML File → process_xml.py → SQLite Database
+   ```
+
+2. **Web Application Flow**
+   ```
+   User Request → app.py → database.py → Response
+   ```
+
+3. **Frontend Flow**
+   ```
+   User Interface → JavaScript → API Calls → Dynamic Updates
+   ```
+
+### Database Schema
+
+The SQLite database uses a single table 'transactions' with the following structure:
+
+```sql
+CREATE TABLE transactions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,           -- Sender/recipient name
+    amount REAL,         -- Transaction amount
+    type TEXT,          -- Transaction type
+    date TEXT,          -- Transaction date
+    phone_number TEXT,   -- Associated phone number
+    balance_after REAL   -- Balance after transaction
+)
+```
+
 ## 🔧 Prerequisites
 
 - Python 3.8 or higher
@@ -228,6 +345,17 @@ http://localhost:5000
 - Analyze total amounts by transaction type
 - Filter transactions by date range
 - Search for specific transactions
+
+### Transaction Type Filtering
+- Select a transaction type from the dropdown menu
+- View a grid of cards showing people who made that type of transaction
+- Each card displays:
+  - Person's name
+  - Total transaction amount
+  - Number of transactions
+  - Average transaction amount
+- Click "View Details" to see the person's complete transaction history
+- Cards are responsive and adapt to different screen sizes
 
 ### Individual Analysis
 - Click on any person's name to view their transaction history

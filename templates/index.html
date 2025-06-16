@@ -25,6 +25,23 @@
             </div>
         </div>
 
+        <!-- Add Transaction Type Filter -->
+        <div class="transaction-filter">
+            <h2>Filter by Transaction Type</h2>
+            <select id="transactionTypeFilter" onchange="filterByTransactionType()">
+                <option value="">Select Transaction Type</option>
+                {% for label in chart_labels %}
+                <option value="{{ label|e }}">{{ label|e }}</option>
+                {% endfor %}
+            </select>
+            <div id="filteredResults" class="filtered-results" style="display: none;">
+                <h3>People who made <span id="selectedType"></span> transactions:</h3>
+                <div id="loadingMessage" style="display: none;">Loading...</div>
+                <div id="errorMessage" style="display: none;" class="error-message"></div>
+                <div class="results-grid" id="peopleList"></div>
+            </div>
+        </div>
+
         <div class="transaction-table">
             <h2>Transaction History</h2>
             <table>
@@ -335,6 +352,87 @@
             }
 
             personChart = new Chart(ctx, chartConfig);
+        }
+
+        function filterByTransactionType() {
+            const selectedType = document.getElementById('transactionTypeFilter').value;
+            const filteredResults = document.getElementById('filteredResults');
+            const loadingMessage = document.getElementById('loadingMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            const peopleList = document.getElementById('peopleList');
+
+            if (!selectedType) {
+                filteredResults.style.display = 'none';
+                return;
+            }
+
+            document.getElementById('selectedType').textContent = selectedType;
+            filteredResults.style.display = 'block';
+            loadingMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+            peopleList.innerHTML = '';
+
+            fetch(`/transactions/${encodeURIComponent(selectedType)}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    loadingMessage.style.display = 'none';
+                    
+                    if (!data.people || data.people.length === 0) {
+                        peopleList.innerHTML = '<div class="no-results">No transactions found for this type</div>';
+                        return;
+                    }
+                    
+                    data.people.forEach(person => {
+                        const transactions = data.transactions[person];
+                        const totalAmount = transactions.reduce((sum, t) => sum + t.amount, 0);
+                        const avgAmount = totalAmount / transactions.length;
+                        
+                        const card = document.createElement('div');
+                        card.className = 'person-card';
+                        card.innerHTML = `
+                            <div class="person-header">
+                                <h4>${person}</h4>
+                            </div>
+                            <div class="person-stats">
+                                <div class="stat-item">
+                                    <span class="stat-label">Total Amount</span>
+                                    <span class="stat-value">${totalAmount.toFixed(2)}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Transactions</span>
+                                    <span class="stat-value">${transactions.length}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Average Amount</span>
+                                    <span class="stat-value">${avgAmount.toFixed(2)}</span>
+                                </div>
+                            </div>
+                            <div class="person-actions">
+                                <button onclick="showPersonTransactions('${person.replace(/'/g, "\\'")}', '${selectedType.replace(/'/g, "\\'")}')">
+                                    View Details
+                                </button>
+                            </div>
+                        `;
+                        peopleList.appendChild(card);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    loadingMessage.style.display = 'none';
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = 'Error loading data. Please try again.';
+                });
+        }
+
+        function showPersonTransactions(name, type) {
+            document.getElementById('selectedPerson').textContent = name;
+            modal.style.display = 'block';
+            fetchPersonData(name);
         }
     </script>
 </body>
